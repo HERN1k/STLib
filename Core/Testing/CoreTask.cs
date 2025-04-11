@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,7 @@ namespace STLib.Core.Testing
     /// Represents an abstract base class for managing core task functionality.
     /// Provides properties and methods for handling task-related data, such as ID, name, question, and grading.
     /// </summary>
-    public abstract class CoreTask : IComparable, IComparable<CoreTask>, IEquatable<CoreTask>
+    public abstract class CoreTask : IComparable, IComparable<CoreTask>, IEquatable<CoreTask>, INotifyPropertyChanged
     {
         #region Public properties
         /// <summary>
@@ -25,6 +26,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_taskID = value;
+                OnPropertyChanged(nameof(TaskID));
             }
         }
         /// <summary>
@@ -51,6 +53,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
         /// <summary>
@@ -77,6 +80,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_question = value;
+                OnPropertyChanged(nameof(Question));
             }
         }
         /// <summary>
@@ -93,6 +97,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_correctAnswer = value;
+                OnPropertyChanged(nameof(CorrectAnswer));
             }
         }
         /// <summary>
@@ -104,6 +109,7 @@ namespace STLib.Core.Testing
             protected set
             {
                 m_answer = value ?? throw new ArgumentNullException(nameof(Answer));
+                OnPropertyChanged(nameof(Answer));
             }
         }
         /// <summary>
@@ -120,6 +126,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_type = value;
+                OnPropertyChanged(nameof(Type));
             }
         }                                              // Dont change this value
         /// <summary>
@@ -128,7 +135,11 @@ namespace STLib.Core.Testing
         public bool Consider
         {
             get => m_consider;
-            protected set => m_consider = value;
+            protected set
+            {
+                m_consider = value;
+                OnPropertyChanged(nameof(Consider));
+            }
         }
         /// <summary>
         /// Gets or sets a value indicating whether the task has been answered.
@@ -136,7 +147,11 @@ namespace STLib.Core.Testing
         public bool IsAnswered
         {
             get => m_isAnswered;
-            protected set => m_isAnswered = value;
+            protected set 
+            {
+                m_isAnswered = value;
+                OnPropertyChanged(nameof(IsAnswered));
+            }
         }
         /// <summary>
         /// Gets or sets the maximum grade for the task.
@@ -152,6 +167,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_maxGrade = value;
+                OnPropertyChanged(nameof(MaxGrade));
             }
         }
         /// <summary>
@@ -168,8 +184,11 @@ namespace STLib.Core.Testing
                 }
 
                 m_grade = value;
+                OnPropertyChanged(nameof(Grade));
             }
         }
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
 
         #region Private properties
@@ -339,6 +358,14 @@ namespace STLib.Core.Testing
             IsAnswered = false;
             Grade = 0;
 
+        }
+        /// <summary>
+        /// Raises the PropertyChanged event for the specified property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

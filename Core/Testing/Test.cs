@@ -6,13 +6,14 @@ using System.Text.Json.Serialization;
 using System.IO;
 using System.Text.Json;
 using System.IO.Compression;
+using System.ComponentModel;
 
 namespace STLib.Core.Testing
 {
     /// <summary>
     /// Represents a test containing tasks, metadata, and functionality for managing test lifecycle, grading, and serialization.
     /// </summary>
-    public sealed class Test : IComparable, IComparable<Test>, IEquatable<Test>
+    public class Test : IComparable, IComparable<Test>, IEquatable<Test>, INotifyPropertyChanged
     {
         #region Public properties
         /// <summary>
@@ -29,6 +30,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_testID = value;
+                OnPropertyChanged(nameof(TestID));
             }
         }
         /// <summary>
@@ -45,6 +47,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_created = value;
+                OnPropertyChanged(nameof(Created));
             }
         }
         /// <summary>
@@ -81,6 +84,8 @@ namespace STLib.Core.Testing
 
                     m_tasks.Add(task);
                 }
+
+                OnPropertyChanged(nameof(Tasks));
             }
         }
         /// <summary>
@@ -104,6 +109,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_maxGrade = value;
+                OnPropertyChanged(nameof(MaxGrade));
             }
         }
         /// <summary>
@@ -120,6 +126,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_grade = value;
+                OnPropertyChanged(nameof(Grade));
             }
         }
         /// <summary>
@@ -128,7 +135,11 @@ namespace STLib.Core.Testing
         public bool IsFinished
         {
             get => m_isFinished;
-            private set => m_isFinished = value;
+            private set
+            {
+                m_isFinished = value;
+                OnPropertyChanged(nameof(IsFinished));
+            }
         }
         /// <summary>
         /// Gets the total allowed time for the test.
@@ -149,6 +160,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_testTime = value;
+                OnPropertyChanged(nameof(TestTime));
             }
         }
         /// <summary>
@@ -177,6 +189,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_startTime = value;
+                OnPropertyChanged(nameof(StartTime));
             }
         }
         /// <summary>
@@ -205,6 +218,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_endTime = value;
+                OnPropertyChanged(nameof(EndTime));
             }
         }
         /// <summary>
@@ -233,6 +247,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_lastModified = value;
+                OnPropertyChanged(nameof(LastModified));
             }
         }
         /// <summary>
@@ -253,6 +268,8 @@ namespace STLib.Core.Testing
                 m_modifiers.Clear();
                 m_modifiers.AddRange(modifiers);
                 m_modifiers.AddRange(value);
+
+                OnPropertyChanged(nameof(Modifiers));
             }
         }
         /// <summary>
@@ -273,6 +290,8 @@ namespace STLib.Core.Testing
                 m_attentions.Clear();
                 m_attentions.AddRange(attentions);
                 m_attentions.AddRange(value);
+
+                OnPropertyChanged(nameof(Attentions));
             }
         }
         /// <summary>
@@ -299,6 +318,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
         /// <summary>
@@ -325,6 +345,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_description = value;
+                OnPropertyChanged(nameof(Description));
             }
         }
         /// <summary>
@@ -351,6 +372,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_instructions = value;
+                OnPropertyChanged(nameof(Instructions));
             }
         }
         /// <summary>
@@ -367,6 +389,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_creator = value;
+                OnPropertyChanged(nameof(Creator));
             }
         }
         /// <summary>
@@ -392,6 +415,8 @@ namespace STLib.Core.Testing
                 m_subjects.Clear();
                 m_subjects.AddRange(subjects);
                 m_subjects.AddRange(value);
+
+                OnPropertyChanged(nameof(Subjects));
             }
         }
         /// <summary>
@@ -400,8 +425,14 @@ namespace STLib.Core.Testing
         public bool IsReadOnly
         {
             get => m_isReadOnly;
-            private set => m_isReadOnly = value;
+            private set
+            {
+                m_isReadOnly = value;
+                OnPropertyChanged(nameof(IsReadOnly));
+            }
         }
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
 
         #region Private properties
@@ -1093,6 +1124,14 @@ namespace STLib.Core.Testing
                 span[length + 1] = '.';
                 span[length + 2] = '.';
             });
+        }
+        /// <summary>
+        /// Raises the PropertyChanged event for the specified property.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 
