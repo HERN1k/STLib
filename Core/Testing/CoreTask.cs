@@ -26,6 +26,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_taskID = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(TaskID));
             }
         }
@@ -53,6 +54,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_name = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(Name));
             }
         }
@@ -80,6 +82,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_question = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(Question));
             }
         }
@@ -97,6 +100,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_correctAnswer = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(CorrectAnswer));
             }
         }
@@ -109,6 +113,7 @@ namespace STLib.Core.Testing
             protected set
             {
                 m_answer = value ?? throw new ArgumentNullException(nameof(Answer));
+                IsNew = false;
                 OnPropertyChanged(nameof(Answer));
             }
         }
@@ -138,6 +143,7 @@ namespace STLib.Core.Testing
             protected set
             {
                 m_consider = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(Consider));
             }
         }
@@ -150,6 +156,7 @@ namespace STLib.Core.Testing
             protected set 
             {
                 m_isAnswered = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(IsAnswered));
             }
         }
@@ -167,6 +174,7 @@ namespace STLib.Core.Testing
                 }
 
                 m_maxGrade = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(MaxGrade));
             }
         }
@@ -184,7 +192,22 @@ namespace STLib.Core.Testing
                 }
 
                 m_grade = value;
+                IsNew = false;
                 OnPropertyChanged(nameof(Grade));
+            }
+        }
+        /// <summary>
+        /// Gets or sets a value indicating whether the task is new.
+        /// </summary>
+        public bool IsNew 
+        {
+            get => m_isNew;
+            set 
+            {
+                if (value == false)
+                {
+                    m_isNew = false;
+                }
             }
         }
         /// <inheritdoc />
@@ -202,6 +225,7 @@ namespace STLib.Core.Testing
         private bool m_isAnswered = default;
         private int m_maxGrade = 1;
         private int m_grade = default;
+        private bool m_isNew = true;
         #endregion
 
         #region Constructors
@@ -260,12 +284,6 @@ namespace STLib.Core.Testing
         /// <returns><c>true</c> if the task is correct; otherwise, <c>false</c>.</returns>
         public virtual bool IsCorrectTask()
         {
-            if (string.IsNullOrWhiteSpace(m_name) ||
-                m_name.Equals("NULL", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return false;
-            }
-
             if (string.IsNullOrWhiteSpace(m_question) ||
                 m_question.Equals("NULL", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -357,7 +375,6 @@ namespace STLib.Core.Testing
             Answer = string.Empty;
             IsAnswered = false;
             Grade = 0;
-
         }
         /// <summary>
         /// Raises the PropertyChanged event for the specified property.

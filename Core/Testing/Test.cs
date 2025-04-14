@@ -576,11 +576,6 @@ namespace STLib.Core.Testing
                 return false;
             }
 
-            if (m_subjects.Count == 0)
-            {
-                return false;
-            }
-
             return true;
         }
         /// <summary>
