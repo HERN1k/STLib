@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 using STLib.Core.Testing;
 
 namespace STLib.Tasks.Checkboxes
@@ -35,6 +34,7 @@ namespace STLib.Tasks.Checkboxes
 
                 m_answers.Clear();
                 m_answers.AddRange(value);
+                IsNew = false;
             }
         }
         #endregion
@@ -214,6 +214,49 @@ namespace STLib.Tasks.Checkboxes
             SetCorrectAnswer(JsonSerializer.Serialize<List<string>>(correctAnswersList));
         }
         /// <summary>
+        /// Adds an answer to the list of correct answers.
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void SetCorrectAnswerItem(string answer)
+        {
+            answer = answer.Trim();
+
+            var correctAnswersList = GetCorrectAnswers();
+
+            if (correctAnswersList.Count > m_maxAnswers)
+            {
+                throw new ArgumentOutOfRangeException(nameof(correctAnswersList), $"The number of correct answers cannot exceed {m_maxAnswers}.");
+            }
+
+            if (correctAnswersList.Contains(answer))
+            {
+                return;
+            }
+
+            correctAnswersList.Add(answer);
+
+            this.MaxGrade = correctAnswersList.Count;
+
+            SetCorrectAnswer(JsonSerializer.Serialize<List<string>>(correctAnswersList));
+        }
+        /// <summary>
+        /// Remove answer in the list of correct answers.
+        /// </summary>
+        /// <param name="answer"></param>
+        public void RemoveCorrectAnswerItem(string answer)
+        {
+            answer = answer.Trim();
+
+            var correctAnswersList = GetCorrectAnswers();
+
+            correctAnswersList.Remove(answer);
+
+            this.MaxGrade = correctAnswersList.Count;
+
+            SetCorrectAnswers(correctAnswersList);
+        }
+        /// <summary>
         /// Adds an answer to the list of possible answers.
         /// </summary>
         /// <param name="answer">The answer to add.</param>
@@ -232,9 +275,45 @@ namespace STLib.Tasks.Checkboxes
             }
 
             m_answers.Add(answer);
-        }
+            IsNew = false;
 
-        private List<string> GetUserAnswers()
+            if (this.CorrectAnswer.Equals("NULL", StringComparison.InvariantCultureIgnoreCase))
+            {
+                SetCorrectAnswer("[]");
+            }
+        }
+        /// <summary>
+        /// Removes an answer from the list of possible answers.
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void RemoveAnswersItem(string answer)
+        {
+            answer = answer.Trim();
+
+            if (!m_answers.Contains(answer))
+            {
+                throw new ArgumentException($"The answer \"{answer}\" is not in the list of answers.");
+            }
+
+            m_answers.Remove(answer);
+
+            if (this.CorrectAnswer.Equals("NULL", StringComparison.InvariantCultureIgnoreCase))
+            {
+                SetCorrectAnswer("[]");
+            }
+
+            var correctAnswers = GetCorrectAnswers();
+
+            correctAnswers.Remove(answer);
+
+            SetCorrectAnswers(correctAnswers);
+        }
+        /// <summary>
+        /// Gets the user's answers for the task.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetUserAnswers()
         {
             var answer = string.IsNullOrEmpty(this.Answer) ? "[]" : this.Answer;
             var userAnswersList = JsonSerializer.Deserialize<List<string>>(answer);
@@ -248,8 +327,12 @@ namespace STLib.Tasks.Checkboxes
 
             return userAnswersList;
         }
-
-        private void SetUserAnswers(List<string> userAnswersList)
+        /// <summary>
+        /// Sets the user's answers for the task.
+        /// </summary>
+        /// <param name="userAnswersList"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void SetUserAnswers(List<string> userAnswersList)
         {
             if (userAnswersList == null)
             {
@@ -258,8 +341,11 @@ namespace STLib.Tasks.Checkboxes
 
             this.Answer = JsonSerializer.Serialize<List<string>>(userAnswersList);
         }
-
-        private List<string> GetCorrectAnswers()
+        /// <summary>
+        /// Gets the correct answers for the task.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetCorrectAnswers()
         {
             var correctAnswersList = JsonSerializer.Deserialize<List<string>>(this.CorrectAnswer);
 

@@ -94,12 +94,7 @@ namespace STLib.Core.Testing
             get => m_correctAnswer;
             protected set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentNullException(nameof(CorrectAnswer));
-                }
-
-                m_correctAnswer = value;
+                m_correctAnswer = value ?? string.Empty;
                 IsNew = false;
                 OnPropertyChanged(nameof(CorrectAnswer));
             }
@@ -112,7 +107,7 @@ namespace STLib.Core.Testing
             get => m_answer;
             protected set
             {
-                m_answer = value ?? throw new ArgumentNullException(nameof(Answer));
+                m_answer = value ?? string.Empty;
                 IsNew = false;
                 OnPropertyChanged(nameof(Answer));
             }

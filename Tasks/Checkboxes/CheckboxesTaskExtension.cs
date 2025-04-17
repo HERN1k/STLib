@@ -80,6 +80,30 @@ namespace STLib.Tasks.Checkboxes
             return task;
         }
         /// <summary>
+        /// Adds a single correct answer to the list of correct answers for the <see cref="CheckboxesTask"/>.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="correctAnswer"></param>
+        /// <returns></returns>
+        public static CheckboxesTask AddCorrectAnswerItem(this CheckboxesTask task, string correctAnswer)
+        {
+            task.SetCorrectAnswerItem(correctAnswer);
+
+            return task;
+        }
+        /// <summary>
+        /// Removes a single correct answer from the list of correct answers for the <see cref="CheckboxesTask"/>.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="correctAnswer"></param>
+        /// <returns></returns>
+        public static CheckboxesTask RemoveCorrectAnswerItem(this CheckboxesTask task, string correctAnswer)
+        {
+            task.RemoveCorrectAnswerItem(correctAnswer);
+
+            return task;
+        }
+        /// <summary>
         /// Adds a single answer to the list of possible answers for the <see cref="CheckboxesTask"/>.
         /// </summary>
         /// <param name="task">The task to modify.</param>
@@ -88,6 +112,18 @@ namespace STLib.Tasks.Checkboxes
         public static CheckboxesTask AddAnswerItem(this CheckboxesTask task, string answer)
         {
             task.SetAnswersItem(answer);
+
+            return task;
+        }
+        /// <summary>
+        /// Removes a single answer from the list of possible answers for the <see cref="CheckboxesTask"/>.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="answer"></param>
+        /// <returns></returns>
+        public static CheckboxesTask RemoveAnswerItem(this CheckboxesTask task, string answer)
+        {
+            task.RemoveAnswerItem(answer);
 
             return task;
         }

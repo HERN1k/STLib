@@ -89,5 +89,17 @@
 
             return task;
         }
+        /// <summary>
+        /// Removes a single answer from the list of possible answers for the <see cref="MultipleChoiceTask"/>.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="answer"></param>
+        /// <returns></returns>
+        public static MultipleChoiceTask RemoveAnswerItem(this MultipleChoiceTask task, string answer)
+        {
+            task.RemoveAnswersItem(answer);
+
+            return task;
+        }
     }
 }

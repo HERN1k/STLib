@@ -33,6 +33,7 @@ namespace STLib.Tasks.MultipleChoice
 
                 m_answers.Clear();
                 m_answers.AddRange(value);
+                IsNew = false;
             }
         }
         #endregion
@@ -157,6 +158,30 @@ namespace STLib.Tasks.MultipleChoice
             }
 
             m_answers.Add(answer);
+            IsNew = false;
+        }
+
+        /// <summary>
+        /// Removes an answer from the list of possible answers.
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void RemoveAnswersItem(string answer)
+        {
+            answer = answer.Trim();
+
+            if (!m_answers.Contains(answer))
+            {
+                throw new ArgumentException($"The answer \"{answer}\" is not in the list of answers.");
+            }
+
+            m_answers.Remove(answer);
+
+            if (answer.Equals(this.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.CorrectAnswer = string.Empty;
+            }
+            IsNew = false;
         }
         #endregion
 

@@ -431,6 +431,20 @@ namespace STLib.Core.Testing
                 OnPropertyChanged(nameof(IsReadOnly));
             }
         }
+        /// <summary>
+        /// Gets or sets a value indicating whether the test is new.
+        /// </summary>
+        public bool IsNew
+        {
+            get => m_isNew;
+            set
+            {
+                if (value == false)
+                {
+                    m_isNew = false;
+                }
+            }
+        }
         /// <inheritdoc />
         public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
@@ -455,6 +469,7 @@ namespace STLib.Core.Testing
         private Guid m_creator = Guid.Empty;
         private readonly List<Guid> m_subjects = new List<Guid>();
         private bool m_isReadOnly = default;
+        private bool m_isNew = true;
         #endregion
 
         #region Constructors
@@ -652,6 +667,8 @@ namespace STLib.Core.Testing
 
             Reset();
 
+            IsNew = false;
+
             AddLastModifier(Creator);
         }
         /// <summary>
@@ -745,6 +762,8 @@ namespace STLib.Core.Testing
             Grade = CalculateGrade();
 
             IsFinished = true;
+
+            IsNew = false;
 
             AddLastModifier(modifier);
         }
