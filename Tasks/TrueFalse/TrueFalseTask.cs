@@ -23,6 +23,7 @@ namespace STLib.Tasks.TrueFalse
         private TrueFalseTask(TaskType taskType)
             : base(type: taskType)
         {
+            this.CorrectAnswer = m_trueAnswer;
         }
         /// <summary>
         /// JSON constructor for deserializing a <see cref="TrueFalseTask"/> object.

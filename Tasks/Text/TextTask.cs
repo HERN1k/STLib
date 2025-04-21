@@ -82,7 +82,10 @@ namespace STLib.Tasks.Text
                 return default;
             }
 
-            if (answer.Equals(this.CorrectAnswer, StringComparison.InvariantCultureIgnoreCase))
+            var thisAnswer = answer.Replace(" ", "").Trim();
+            var correctAnswer = this.CorrectAnswer.Replace(" ", "").Trim();
+
+            if (thisAnswer.Equals(correctAnswer, StringComparison.InvariantCultureIgnoreCase))
             {
                 return this.MaxGrade;
             }

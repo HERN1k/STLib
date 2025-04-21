@@ -51,11 +51,11 @@ namespace STLib.Core.Testing
             }
         }
         /// <summary>
-        /// Gets the list of tasks associated with the test.
+        /// Gets the HashSet of tasks associated with the test.
         /// </summary>
-        public List<CoreTask> Tasks
+        public HashSet<CoreTask> Tasks
         {
-            get => new List<CoreTask>(m_tasks);
+            get => m_tasks;
             private set
             {
                 if (value == null)
@@ -73,8 +73,6 @@ namespace STLib.Core.Testing
                     throw new ArgumentOutOfRangeException(nameof(Tasks), $"Tasks cannot exceed {MaxTasks}.");
                 }
 
-                m_tasks.Clear();
-
                 foreach (var task in value)
                 {
                     if (task == null)
@@ -86,6 +84,20 @@ namespace STLib.Core.Testing
                 }
 
                 OnPropertyChanged(nameof(Tasks));
+            }
+        }
+        /// <summary>
+        /// Gets the list of tasks sorted by their consideration status.
+        /// </summary>
+        public List<CoreTask> SortedTasks
+        {
+            get
+            {
+                var tasks = m_tasks.ToArray();
+
+                Array.Sort(tasks, (x, y) => x.Consider.CompareTo(y.Consider));
+
+                return tasks.ToList();
             }
         }
         /// <summary>
@@ -505,7 +517,7 @@ namespace STLib.Core.Testing
         /// <param name="subjects">The list of subjects associated with the test.</param>
         [JsonConstructor]
 #pragma warning disable IDE0051
-        private Test(Guid testID, DateTime created, List<CoreTask> tasks, int maxGrade, int grade, bool isFinished, TimeSpan testTime, DateTime startTime, DateTime endTime, DateTime lastModified, List<Guid> modifiers, List<Attention> attentions, string name, string description, string instructions, Guid creator, List<Guid> subjects)
+        private Test(Guid testID, DateTime created, HashSet<CoreTask> tasks, int maxGrade, int grade, bool isFinished, TimeSpan testTime, DateTime startTime, DateTime endTime, DateTime lastModified, List<Guid> modifiers, List<Attention> attentions, string name, string description, string instructions, Guid creator, List<Guid> subjects)
 #pragma warning restore IDE0051
         {
             TestID = testID;
@@ -1024,6 +1036,21 @@ namespace STLib.Core.Testing
         public void SetSubject(Guid subject)
         {
             Subjects = new List<Guid>() { subject };
+        }
+        /// <summary>
+        /// Updates the subject of the test with a list of subject identifiers.
+        /// </summary>
+        /// <param name="subject"></param>
+        public void RemoveSubject(Guid subject)
+        {
+            if (subject.Equals(Guid.Empty))
+            {
+                return;
+            }
+
+            m_subjects.Remove(subject);
+
+            OnPropertyChanged(nameof(Subjects));
         }
         /// <summary>
         /// Updates the total allowed time for the test.
