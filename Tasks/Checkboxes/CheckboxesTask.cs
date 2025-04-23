@@ -58,9 +58,9 @@ namespace STLib.Tasks.Checkboxes
         /// </summary>
         [JsonConstructor]
 #pragma warning disable IDE0051
-        private CheckboxesTask(Guid taskID, string name, string question, string[] answers, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade)
+        private CheckboxesTask(Guid taskID, string name, string question, string[] answers, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade, bool isNew)
 #pragma warning restore IDE0051
-            : base(taskID, name, question, correctAnswer, answer, type, consider, isAnswered, maxGrade, grade)
+            : base(taskID, name, question, correctAnswer, answer, type, consider, isAnswered, maxGrade, grade, isNew)
         {
             Answers = answers;
         }

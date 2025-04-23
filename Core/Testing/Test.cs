@@ -417,11 +417,6 @@ namespace STLib.Core.Testing
                     throw new ArgumentNullException(nameof(Subjects));
                 }
 
-                if (value.Count == 0)
-                {
-                    throw new ArgumentException("Subjects cannot be empty.", nameof(Subjects));
-                }
-
                 var subjects = m_subjects.ToArray();
 
                 m_subjects.Clear();
@@ -457,6 +452,24 @@ namespace STLib.Core.Testing
                 }
             }
         }
+        /// <summary>
+        /// Gets the code associated with the test.
+        /// </summary>
+        public string Code
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(m_code))
+                {
+                    m_code = TestID
+                        .ToString()
+                        .Substring(0, 8)
+                        .ToUpperInvariant();
+                }
+
+                return m_code;
+            }
+        }
         /// <inheritdoc />
         public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
@@ -482,6 +495,7 @@ namespace STLib.Core.Testing
         private readonly List<Guid> m_subjects = new List<Guid>();
         private bool m_isReadOnly = default;
         private bool m_isNew = true;
+        private string m_code = string.Empty;
         #endregion
 
         #region Constructors
@@ -515,9 +529,11 @@ namespace STLib.Core.Testing
         /// <param name="instructions">The instructions for the test.</param>
         /// <param name="creator">The unique identifier of the test creator.</param>
         /// <param name="subjects">The list of subjects associated with the test.</param>
+        /// <param name="isReadOnly">A value indicating whether the test is read-only.</param>
+        /// <param name="isNew">A value indicating whether the test is new.</param>
         [JsonConstructor]
 #pragma warning disable IDE0051
-        private Test(Guid testID, DateTime created, HashSet<CoreTask> tasks, int maxGrade, int grade, bool isFinished, TimeSpan testTime, DateTime startTime, DateTime endTime, DateTime lastModified, List<Guid> modifiers, List<Attention> attentions, string name, string description, string instructions, Guid creator, List<Guid> subjects)
+        private Test(Guid testID, DateTime created, HashSet<CoreTask> tasks, int maxGrade, int grade, bool isFinished, TimeSpan testTime, DateTime startTime, DateTime endTime, DateTime lastModified, List<Guid> modifiers, List<Attention> attentions, string name, string description, string instructions, Guid creator, List<Guid> subjects, bool isReadOnly, bool isNew)
 #pragma warning restore IDE0051
         {
             TestID = testID;
@@ -537,6 +553,8 @@ namespace STLib.Core.Testing
             Instructions = instructions;
             Creator = creator;
             Subjects = subjects;
+            IsReadOnly = isReadOnly;
+            IsNew = isNew;
         }
         #endregion
 

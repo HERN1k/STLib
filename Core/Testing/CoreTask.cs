@@ -48,11 +48,6 @@ namespace STLib.Core.Testing
                     throw new ArgumentOutOfRangeException(nameof(Name), "Name cannot exceed 100 characters.");
                 }
 
-                if (value.Contains("NULL"))
-                {
-                    throw new ArgumentException("Name cannot contain \"NULL\".", nameof(Name));
-                }
-
                 m_name = value;
                 IsNew = false;
                 OnPropertyChanged(nameof(Name));
@@ -244,9 +239,10 @@ namespace STLib.Core.Testing
         /// <param name="consider">A value indicating whether the task should be considered for grading.</param>
         /// <param name="isAnswered">A value indicating whether the task has been answered.</param>
         /// <param name="maxGrade">The maximum grade for the task.</param>
-        /// <param name="grade">The grade achieved for the task.</param>
+        /// <param name="grade">The grade achieved for the task.</param>'
+        /// <param name="isNew">A value indicating whether the task is new.</param>
         [JsonConstructor]
-        protected CoreTask(Guid taskID, string name, string question, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade)
+        protected CoreTask(Guid taskID, string name, string question, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade, bool isNew)
         {
             TaskID = taskID;
             Name = name;
@@ -258,6 +254,7 @@ namespace STLib.Core.Testing
             Grade = grade;
             CorrectAnswer = correctAnswer;
             Answer = answer;
+            IsNew = isNew;
         }
         #endregion
 

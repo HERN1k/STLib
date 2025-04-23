@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using STLib.Core.Testing;
@@ -24,9 +25,9 @@ namespace STLib.Tasks.Text
         /// </summary>
         [JsonConstructor]
 #pragma warning disable IDE0051
-        private TextTask(Guid taskID, string name, string question, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade)
+        private TextTask(Guid taskID, string name, string question, string correctAnswer, string answer, TaskType type, bool consider, bool isAnswered, int maxGrade, int grade, bool isNew)
 #pragma warning restore IDE0051
-            : base(taskID, name, question, correctAnswer, answer, type, consider, isAnswered, maxGrade, grade)
+            : base(taskID, name, question, correctAnswer, answer, type, consider, isAnswered, maxGrade, grade, isNew)
         {
         }
         #endregion
